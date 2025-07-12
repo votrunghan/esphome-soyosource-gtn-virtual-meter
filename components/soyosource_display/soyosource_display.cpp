@@ -316,7 +316,7 @@ void SoyosourceDisplay::on_ms51_settings_data_(const std::vector<uint8_t> &data)
 
   // 2     1   0xD3                   Operation mode (High nibble), Frame function (Low nibble)
   uint8_t operation_mode_setting = this->operation_mode_to_operation_mode_setting_(data[2] >> 4);
-  ESP_LOGI(TAG, "  Operation mode setting: %d (0x%02X)", operation_mode_setting, operation_mode_setting);
+  ESP_LOGI(TAG, "  Cài đặt chế độ hoạt động: %d (0x%02X)", operation_mode_setting, operation_mode_setting);
   this->current_settings_.OperationMode = operation_mode_setting;
   if (this->operation_mode_select_ != nullptr) {
     for (auto &listener : this->select_listeners_) {
@@ -330,35 +330,35 @@ void SoyosourceDisplay::on_ms51_settings_data_(const std::vector<uint8_t> &data)
   // 4     1   0xD4                   Device model
   //                                  0xD4 = 212 -> 220V, 112 -> 110V
   //                                  0xD4 = 212 -> 1200W, 210 -> 1000W
-  ESP_LOGI(TAG, "  Device model: %d W, %d V (%d)", (data[4] % 100) * 100, (data[4] > 200) ? 220 : 110, data[4]);
+  ESP_LOGI(TAG, "  Mô hình thiết bị: %d W, %d V (%d)", (data[4] % 100) * 100, (data[4] > 200) ? 220 : 110, data[4]);
 
   // 5     1   0x30                   Specs: Battery voltage           V           48 V
-  ESP_LOGI(TAG, "  Device type: %s", this->device_type_to_string_(data[5]).c_str());
-  ESP_LOGI(TAG, "  Battery voltage: %d V", data[5]);
+  ESP_LOGI(TAG, "  Loại thiết bị: %s", this->device_type_to_string_(data[5]).c_str());
+  ESP_LOGI(TAG, "  Điện áp pin: %d V", data[5]);
 
   // 6     1   0x31                   Starting voltage                 V           49 V
   uint8_t start_voltage = data[6];
-  ESP_LOGI(TAG, "  Start voltage: %d V", start_voltage);
+  ESP_LOGI(TAG, "  Bắt đầu điện áp: %d V", start_voltage);
   this->current_settings_.StartVoltage = start_voltage;
   this->publish_state_(this->start_voltage_number_, start_voltage);
 
   // 7     1   0x2F                   Shutdown voltage                 V           47 V
   uint8_t shutdown_voltage = data[7];
-  ESP_LOGI(TAG, "  Shutdown voltage: %d V", shutdown_voltage);
+  ESP_LOGI(TAG, "  Điện áp tắt máy: %d V", shutdown_voltage);
   this->current_settings_.ShutdownVoltage = shutdown_voltage;
   this->publish_state_(this->shutdown_voltage_number_, shutdown_voltage);
 
   // 8     2   0x00 0xE6              Grid voltage                     V           230 V
-  ESP_LOGV(TAG, "  Grid voltage: %.0f V", (float) soyosource_get_16bit(8));
+  ESP_LOGV(TAG, "  Điện áp lưới: %.0f V", (float) soyosource_get_16bit(8));
 
   // 10    1   0x64                   Grid frequency         0.5       Hz          100 * 0.5 = 50 Hz
   uint8_t grid_frequency = data[10];
-  ESP_LOGV(TAG, "  Grid frequency: %.1f Hz", (float) grid_frequency * 0.5f);
+  ESP_LOGV(TAG, "  Tần số lưới: %.1f Hz", (float) grid_frequency * 0.5f);
   this->current_settings_.GridFrequency = grid_frequency;
 
   // 11    1   0x5A                   Battery output power   10        W           90 * 10 = 900 W
   uint8_t output_power_limit = data[11];
-  ESP_LOGI(TAG, "  Output power limit: %d W", output_power_limit * 10);
+  ESP_LOGI(TAG, "  Giới hạn công suất đầu ra: %d W", output_power_limit * 10);
   this->current_settings_.OutputPowerLimit = output_power_limit;
   this->publish_state_(this->output_power_limit_number_, output_power_limit * 10);
 
@@ -367,7 +367,7 @@ void SoyosourceDisplay::on_ms51_settings_data_(const std::vector<uint8_t> &data)
 
   // 13    1   0x06                   Delay in seconds                 s           6
   uint8_t start_delay = data[13];
-  ESP_LOGI(TAG, "  Start delay: %d s", start_delay);
+  ESP_LOGI(TAG, "  Bắt đầu chậm trễ: %d s", start_delay);
   this->current_settings_.StartDelay = start_delay;
   this->publish_state_(this->start_delay_number_, start_delay);
 
